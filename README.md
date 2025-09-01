@@ -34,5 +34,5 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 - `alt <cm>` - Set altitude target
 
 ## Authors
-Jason Angelov - UCLA Computer Science
-William Crowhurst - UCB Physics
+- Jason Angelov - UCLA Computer Science
+- William Crowhurst - UCB Physics
