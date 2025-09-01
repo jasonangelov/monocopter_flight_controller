@@ -1,0 +1,53 @@
+name: Build Release
+
+# Only run when you create a new tag like v1.0.0
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    name: Build and Create Release
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Download code
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # Setup Arduino CLI
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+      
+      # Install platforms and libraries
+      - name: Install dependencies
+        run: |
+          arduino-cli config init
+          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+          arduino-cli lib install "ESP32Servo"
+          arduino-cli lib install "Adafruit BNO055"
+          arduino-cli lib install "Adafruit Unified Sensor"
+      
+      # Compile and output to specific location
+      - name: Compile firmware
+        run: |
+          arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir ./build .
+          ls -la build/
+      
+      # Rename binary for release
+      - name: Prepare release binary
+        run: |
+          mv build/*.ino.bin monocopter-firmware-${{ github.ref_name }}.bin || echo "Binary naming varies"
+          ls -la *.bin
+      
+      # Create GitHub release with binary attached
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: monocopter-firmware-*.bin
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
