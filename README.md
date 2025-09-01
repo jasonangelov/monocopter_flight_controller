@@ -1,6 +1,6 @@
 # Monocopter Flight Controller
 
-ESP32-based autonomous flight controller for a single-rotor helicopter with cyclic fin control.
+ESP32-based autonomous flight controller for a single-rotor drone with thrust vectoring control.
 
 ## Features
 - 200Hz cascade PID control loop
