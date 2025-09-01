@@ -1,50 +1,48 @@
 name: Compile Firmware
 
-# When this workflow runs
 on:
-  push:                      # Run on every push
-    branches: [ main ]       # Only on main branch
-  pull_request:             # Run on pull requests
+  push:
     branches: [ main ]
-  workflow_dispatch:        # Allow manual trigger from GitHub website
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   compile:
     name: Compile ESP32 Firmware
-    runs-on: ubuntu-latest   # Use Ubuntu Linux virtual machine
-    
+    runs-on: ubuntu-latest
+
     steps:
-      # Step 1: Download your code to the virtual machine
       - name: Checkout code
-        uses: actions/checkout@v3
-      
-      # Step 2: Setup Arduino CLI (command line interface)
+        uses: actions/checkout@v4
+
       - name: Setup Arduino CLI
         uses: arduino/setup-arduino-cli@v1
-        
-      # Step 3: Install ESP32 platform
-      - name: Install ESP32 platform
+
+      - name: Install ESP32 core & libraries
         run: |
           arduino-cli config init
           arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
-      
-      # Step 4: Install required libraries
-      - name: Install libraries
+          arduino-cli lib install "ESP32Servo" "Adafruit BNO055" "Adafruit Unified Sensor" "Adafruit BusIO"
+
+      - name: Make sketch name match repo folder (Arduino requirement)
         run: |
-          arduino-cli lib install "ESP32Servo"
-          arduino-cli lib install "Adafruit BNO055"
-          arduino-cli lib install "Adafruit Unified Sensor"
-      
-      # Step 5: Compile the sketch
+          REPO_NAME="$(basename "$GITHUB_WORKSPACE")"
+          if [ ! -f "$REPO_NAME.ino" ]; then
+            cp Monocopter.ino "$REPO_NAME.ino"
+          fi
+
       - name: Compile sketch
         run: |
-          # Navigate to firmware directory if you moved files there
-          # cd firmware  # Uncomment if you moved files to firmware/
-          arduino-cli compile --fqbn esp32:esp32:esp32 Monocopter.ino
-      
-      # Step 6: Check if binary was created (proves compilation worked)
-      - name: Check for binary
-        run: |
-          ls -la *.bin || ls -la build/*/*.bin || echo "Binary file locations vary"
+          arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir build .
+
+      - name: Show build outputs
+        run: ls -la build || true
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: firmware
+          path: build/*.bin
