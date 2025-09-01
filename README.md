@@ -1,6 +1,6 @@
 # Monocopter Flight Controller
 
-[![Compile Firmware](https://github.com/jasonangelov/monocopter-flight-controller/actions/workflows/compile.yml/badge.svg)](https://github.com/jasonangelov/monocopter-flight-controller/actions/workflows/compile.yml)
+[![Compile Firmware](https://github.com/jasonangelov/monocopter_flight_controller/actions/workflows/compile.yml/badge.svg)](https://github.com/jasonangelov/monocopter_flight_controller/actions/workflows/compile.yml)
 
 
 ESP32-based autonomous flight controller for a single-rotor drone with thrust vectoring control.
