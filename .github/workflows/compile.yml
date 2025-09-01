@@ -42,7 +42,7 @@ jobs:
         run: |
           # Navigate to firmware directory if you moved files there
           # cd firmware  # Uncomment if you moved files to firmware/
-          arduino-cli compile --fqbn esp32:esp32:esp32 --warnings all .
+          arduino-cli compile --fqbn esp32:esp32:esp32 Monocopter.ino
       
       # Step 6: Check if binary was created (proves compilation worked)
       - name: Check for binary
