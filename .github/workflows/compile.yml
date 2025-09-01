@@ -1,0 +1,18 @@
+name: Compile Sketch
+
+on: [push, pull_request]
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: esp32:esp32:esp32
+          platforms: esp32:esp32
+          libraries: |
+            - name: ESP32Servo
+            - name: Adafruit BNO055
+          sketch-paths: |
+            - ./
