@@ -2,8 +2,9 @@
 #define CONFIG_H
 
 /* ---------- WiFi Configuration ---------- */
-const char* WIFI_SSID = "YOUR_NETWORK";
-const char* WIFI_PASS = "YOUR_PASSWORD";
+// Use #define instead of const char* to avoid multiple definition errors
+#define WIFI_SSID "YOUR_NETWORK"
+#define WIFI_PASS "YOUR_PASSWORD"
 
 /* ---------- Pin Definitions ---------- */
 const int PIN_S1 = 14;   // Servo 1: +Roll
