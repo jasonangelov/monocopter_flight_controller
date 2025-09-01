@@ -14,8 +14,8 @@ public:
   void update(bool& ctrlEnabled, ControlSystem& control, 
              Actuators& actuators, MSPProtocol& msp);
   
-  bool hasClient() const { return telnet && telnet.connected(); }
-  bool shouldSendTelemetry() const { return telnet.peek() == -1; }
+  bool hasClient() { return telnet && telnet.connected(); }  // REMOVED const
+  bool shouldSendTelemetry() { return telnet.peek() == -1; }  // REMOVED const
   void sendTelemetry(float roll, float pitch, float height, int throttle);
   
 private:
