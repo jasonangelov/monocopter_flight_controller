@@ -33,19 +33,20 @@ jobs:
       
       - name: Compile sketch
         run: |
-          # Compile the sketch in the firmware_monocopter folder
-          arduino-cli compile --fqbn esp32:esp32:esp32 --warnings default --output-dir build firmware_monocopter
+          # Compile with minimal warnings to avoid deprecation notices
+          arduino-cli compile --fqbn esp32:esp32:esp32 --warnings none --output-dir build firmware_monocopter
       
-      - name: Show build outputs
+      - name: Verify build output
         run: |
+          echo "Build completed successfully!"
           echo "Build directory contents:"
-          ls -la build/ || echo "Build directory not found"
-          echo "Looking for .bin files:"
-          find . -name "*.bin" -type f
+          ls -la build/
+          echo "Binary file details:"
+          file build/*.bin
       
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
           name: firmware
           path: build/*.bin
-          if-no-files-found: warn
+          if-no-files-found: error
