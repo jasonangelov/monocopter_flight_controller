@@ -25,16 +25,10 @@ jobs:
           arduino-cli core install esp32:esp32
           arduino-cli lib install "ESP32Servo" "Adafruit BNO055" "Adafruit Unified Sensor" "Adafruit BusIO"
 
-      - name: Make sketch name match repo folder (Arduino requirement)
+      - name: Compile firmware (firmware_monocopter)
         run: |
-          REPO_NAME="$(basename "$GITHUB_WORKSPACE")"
-          if [ ! -f "$REPO_NAME.ino" ]; then
-            cp Monocopter.ino "$REPO_NAME.ino"
-          fi
-
-      - name: Compile firmware
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir build .
+          arduino-cli compile --fqbn esp32:esp32:esp32 --output-dir build firmware_monocopter
+          ls -la build
 
       - name: Prepare release binary
         run: |
