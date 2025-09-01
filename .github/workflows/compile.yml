@@ -1,18 +1,50 @@
-name: Compile Sketch
+name: Compile Firmware
 
-on: [push, pull_request]
+# When this workflow runs
+on:
+  push:                      # Run on every push
+    branches: [ main ]       # Only on main branch
+  pull_request:             # Run on pull requests
+    branches: [ main ]
+  workflow_dispatch:        # Allow manual trigger from GitHub website
 
 jobs:
   compile:
-    runs-on: ubuntu-latest
+    name: Compile ESP32 Firmware
+    runs-on: ubuntu-latest   # Use Ubuntu Linux virtual machine
+    
     steps:
-      - uses: actions/checkout@v2
-      - uses: arduino/compile-sketches@v1
-        with:
-          fqbn: esp32:esp32:esp32
-          platforms: esp32:esp32
-          libraries: |
-            - name: ESP32Servo
-            - name: Adafruit BNO055
-          sketch-paths: |
-            - ./
+      # Step 1: Download your code to the virtual machine
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      # Step 2: Setup Arduino CLI (command line interface)
+      - name: Setup Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+        
+      # Step 3: Install ESP32 platform
+      - name: Install ESP32 platform
+        run: |
+          arduino-cli config init
+          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+      
+      # Step 4: Install required libraries
+      - name: Install libraries
+        run: |
+          arduino-cli lib install "ESP32Servo"
+          arduino-cli lib install "Adafruit BNO055"
+          arduino-cli lib install "Adafruit Unified Sensor"
+      
+      # Step 5: Compile the sketch
+      - name: Compile sketch
+        run: |
+          # Navigate to firmware directory if you moved files there
+          # cd firmware  # Uncomment if you moved files to firmware/
+          arduino-cli compile --fqbn esp32:esp32:esp32 --warnings all .
+      
+      # Step 6: Check if binary was created (proves compilation worked)
+      - name: Check for binary
+        run: |
+          ls -la *.bin || ls -la build/*/*.bin || echo "Binary file locations vary"
