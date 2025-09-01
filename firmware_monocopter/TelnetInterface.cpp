@@ -20,7 +20,7 @@ void TelnetInterface::sendTelemetry(float roll, float pitch, float height, int t
 void TelnetInterface::update(bool& ctrlEnabled, ControlSystem& control,
                              Actuators& actuators, MSPProtocol& msp) {
   if (!telnet || !telnet.connected()) {
-    telnet = telnetServer.available();
+    telnet = telnetServer.accept();
     if (telnet) {
       telnet.print("Monocopter ESP32 > ");
     }
