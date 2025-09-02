@@ -58,6 +58,13 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 ## V3
 <img src="V3/V3.png" alt="drawing" width="600"/>
 
+## V2
+<img src="V2/V2.png" alt="drawing" width="600"/>
+
+## Testing Mount
+<img src="V2/Bench Assembly.png" alt="drawing" width="600"/>
+
+
 ## Authors
 - Jason Angelov - UCLA Computer Science
 - William Crowhurst - UCB Physics
