@@ -5,31 +5,76 @@
 
 ESP32-based autonomous flight controller for a single-rotor drone with thrust vectoring control.
 
+## 1) Introduction
+### 1.1 What is a monocopter?
+- One thrust column, **vectoring fins** steer the vehicle
 
-### What is this project?
-A **monocopter** is a drone that flies using a single thrust column and steers by **vectoring** that thrust with small fins. This build uses a **coaxial, counter-rotating propeller pair** (to cancel torque) plus four fin servos for control. Sensors (IMU, optical flow, LiDAR) tell us attitude, height, and motion over the ground; the ESP32 runs the control loop and exposes a Wi-Fi/Telnet tuning interface.
-
-### Project aspirations
-- **Stable hover:** Achieve stable hover with minimal drift.
+### 1.2 Project goals & aspirations
+- **Steady hover: ** Achieve stable hover with minimal drift.
 - **Controllable movement:** Accurately follow live commands to control position, height, and velocity.
 - **Autonomous landing:** Automatically land/return.
+- **Robust recovery** after bumps/tilts
 
-## Features
-- 200Hz cascade PID control loop
-- IMU-based attitude stabilization (BNO055)
-- LiDAR altitude hold (VL53L0X)
-- WiFi telemetry and tuning interface
-- Differential thrust yaw control
+### 1.3 Core challenges (what makes this hard)
+-**Yaw control:** When propellers spin, conservation of angular momentum causes the chassis to spin (yaw).
+- **Gyroscopic precession:** External torques cause precession due if the chassis has none zero yaw angular momentum.
+- **Coupled aerodynamics**: fin moves affect both lift and rotation.
+- **Balanced weight:** Center of mass is colinear with chassis/propellers.
+- **Control system**: Sensor fusion + PID control. Tuning PID values.
+- **CAD design + Hardware**: Wire management, heat dissipation, power delivery.
 
-## Work in progress 
-- Optical flow positioning (PMW3901)
+---
 
-## Hardware
-- ESP32-WROOM-32
-- Adafruit BNO055 IMU
-- Matek 3901-L0X Optical Flow
+## 2) Current Design (Latest Version: Coaxial, Counter-Rotating)
+### 2.1 Engineering design
+- **Airframe**: ducted, coaxial contra-rotating props for torque cancellation.
+- **Actuation**: four fin servos for roll/pitch.
+- **Yaw control** Differential thrust compensates for any yaw rotations.
+- **Compute/Comms**: ESP32, Wi-Fi/Telnet for live telemetry & tuning
+
+### 2.2 Hardware at a glance
+- **MCU**: ESP32-WROOM-32  
+- **Sensors**: IMU (BNO055) for attitude, LiDAR (VL53L0X) for altitude
+- **Power**: clean 5 V servo rail, shared grounds.
 - 4x servo-controlled fins
 - 2x brushless motors with ESCs
+
+> _Link to: BOM.md, wiring diagram image, CAD/STLs_
+
+### 2.3 Software & control loop
+- **200 Hz** cascade PID control loop:
+  - IMU-based attitude stabilization
+  - Differential thrust yaw control
+  - Altitude hold using LiDAR
+- WiFi telemetry and tuning interface
+
+> _Link to: docs/controls.md (overview), docs/commands.md (CLI/Telnet)_
+
+### 2.4 Current status (what it can do today)
+-  Reliable lift, level attitude, altitude hold
+
+### 2.5 Necessary future improvements
+- **Reduced lateral drift:** Use optical flow sensor + gps to remove sideways drift. 
+
+---
+
+## 3) Project History (What we tried, what failed, what we learned)
+### 3.1 V1 — Single EDF + ESP32 (first prototype)
+- **What we did**: IMU-only stabilization, single edf thrust, manual throttle.  
+- **What failed**: torque-induced yaw due to single edf, poor weight distribution, wire management
+- **Lesson**: Ensure center of mass is colinear with chassis/propellers, switch to wireless connection for efficient debugging/tuning
+
+### 3.2 V2 — EDF + Pi Zero + 3D-printed gimbal (Reinforcement learning attempt)
+- **What we did**: Designed and built a gimbal test rig; experimented with **reinforcement learning**.  
+- **What failed**: Failed to compensate for both yaw spinning and attitude tilts, Poor training efficiency, RL training did not translate to real world environment, lack of RTOS on Raspberry Pi Zero + Python code.
+- **Lesson**: Use two counter rotating propellers to eliminate yaw spin, use a traditional control system approach, better telemetry + debugging tools.
+
+### 3.3 V3 — Coaxial contra-rotating props (current)
+- **What we did**: torque cancellation via coaxial pair, **differential thrust** for yaw, larger chassis diameter.
+- **What worked**: Perfect yaw control, improved balance and weight distribution with larger chassis.
+- **What’s next**: optical-flow to measure translational velocity and drift, gps for position control.
+
+---
 
 ## Setup
 1. Install Arduino IDE with ESP32 support
