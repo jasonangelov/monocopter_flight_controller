@@ -135,16 +135,6 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 - `throttle <1000-2000>` - Set base throttle
 - `alt <cm>` - Set altitude target
 
-# Flight Videos
-
-### Trial 1
-[![](https://img.youtube.com/vi/riI-cIHnShg/hqdefault.jpg)](https://www.youtube.com/watch?v=riI-cIHnShg)
-
-### Trial 2
-[![](https://img.youtube.com/vi/cCDeujReH3Y/hqdefault.jpg)](https://youtu.be/cCDeujReH3Y)
-
-### Trial 3
-[![](https://img.youtube.com/vi/jJXlnwY6VRc/hqdefault.jpg)](https://www.youtube.com/watch?v=jJXlnwY6VRc)
 
 ## Authors
 - Jason Angelov - UCLA Computer Science
