@@ -5,6 +5,15 @@
 
 ESP32-based autonomous flight controller for a single-rotor drone with thrust vectoring control.
 
+
+### What is this project?
+A **monocopter** is a drone that flies using a single thrust column and steers by **vectoring** that thrust with small fins. This build uses a **coaxial, counter-rotating propeller pair** (to cancel torque) plus four fin servos for control. Sensors (IMU, optical flow, LiDAR) tell us attitude, height, and motion over the ground; the ESP32 runs the control loop and exposes a Wi-Fi/Telnet tuning interface.
+
+### Project aspirations
+- **Stable hover:** Achieve stable hover with minimal drift.
+- **Controllable movement:** Accurately follow live commands to control position, height, and velocity.
+- **Autonomous landing:** Automatically land/return.
+
 ## Features
 - 200Hz cascade PID control loop
 - IMU-based attitude stabilization (BNO055)
