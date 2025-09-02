@@ -16,7 +16,7 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 - **Robust recovery** after bumps/tilts
 
 ### 1.3 Core challenges (what makes this hard)
--**Yaw control:** When propellers spin, conservation of angular momentum causes the chassis to spin (yaw).
+- **Yaw control:** When propellers spin, conservation of angular momentum causes the chassis to spin (yaw).
 - **Gyroscopic precession:** External torques cause precession due if the chassis has none zero yaw angular momentum.
 - **Coupled aerodynamics**: fin moves affect both lift and rotation.
 - **Balanced weight:** Center of mass is colinear with chassis/propellers.
