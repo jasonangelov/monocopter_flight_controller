@@ -117,8 +117,8 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 <table>
   <tr>
     <td align="center" width="33%">
-      <a href="pictures/V1/v1_print.jpg">
-        <img src="pictures/V1/v1_print.jpg" alt="V1 3D print" width="260"/>
+      <a href="pictures/V1/v1_print.JPG">
+        <img src="pictures/V1/v1_print.JPG" alt="V1 3D print" width="260"/>
       </a><br/>
       <sub><b>V1 Print</b> — <i>Early CAD/print layout</i></sub>
     </td>
