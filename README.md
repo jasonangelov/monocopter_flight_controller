@@ -59,22 +59,14 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 
 ## CAD DESIGN: Current Version (V4)
 
-<table>
-  <tr>
-    <td align="center" width="33%">
-      <img src="pictures/V4/V4.png" alt="V4 overall assembly" width="280"/><br/>
-      <sub><b>Overall Assembly (V4)</b> — ducted coaxial layout.</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="pictures/V4/V4 Vanes.png" alt="V4 thrust-vectoring vanes" width="280"/><br/>
-      <sub><b>Thrust-Vectoring Vanes</b> — four-fin control surfaces.</sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="pictures/V4/V4 Battery holder.png" alt="V4 battery holder" width="280"/><br/>
-      <sub><b>Battery Holder</b> — centered for CG balance.</sub>
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <a href="pictures/V4/V4.png"><img src="pictures/V4/V4.png" alt="V4 overall assembly" width="280"/></a>
+  <a href="pictures/V4/V4 Vanes.png"><img src="pictures/V4/V4 Vanes.png" alt="V4 vanes" width="280"/></a>
+  <a href="pictures/V4/V4 Battery holder.png"><img src="pictures/V4/V4 Battery holder.png" alt="V4 battery holder" width="280"/></a>
+</p>
+
+<p align="center"><sub><b>Overall Assembly</b> — ducted coaxial layout · <b>Vanes</b> — four-fin control surfaces · <b>Battery Holder</b> — centered for CG balance</sub></p>
+
 
 ---
 
