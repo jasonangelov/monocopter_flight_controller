@@ -104,10 +104,41 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 ---
 
 ## 3) Project History (What we tried, what failed, what we learned)
+
 ### 3.1 V1 — Single EDF + ESP32 (first prototype)
 - **What we did**: IMU-only stabilization, single edf thrust, manual throttle.  
 - **What failed**: torque-induced yaw due to single edf, poor weight distribution, wire management
 - **Lesson**: Ensure center of mass is colinear with chassis/propellers, switch to wireless connection for efficient debugging/tuning
+
+
+## V1 (Design & Early Tests)
+
+<!-- Replace PATH_TO_V1_PRINT.png with your actual PNG path, e.g., pictures/V1/print.png -->
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <a href="pictures/v1_print.png">
+        <img src="pictures/v1_print.png" alt="V1 3D print" width="260"/>
+      </a><br/>
+      <sub><b>V1 Print</b> — <i>Early CAD/print layout</i></sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="https://youtube.com/shorts/o5gzwul9h58?feature=share">
+        <img src="https://img.youtube.com/vi/o5gzwul9h58/hqdefault.jpg" alt="V1 design video thumbnail" width="260"/>
+      </a><br/>
+      <sub><b>V1 Design Video</b> — <i>Walkthrough of V1 concept</i></sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="https://youtube.com/shorts/oQ6uXIYUpS8?feature=share">
+        <img src="https://img.youtube.com/vi/oQ6uXIYUpS8/hqdefault.jpg" alt="V1 flight video thumbnail" width="260"/>
+      </a><br/>
+      <sub><b>V1 Flight Clip</b> — <i>First hover attempts</i></sub>
+    </td>
+  </tr>
+</table>
+
+
+
 
 ### 3.2 V2 — EDF + Pi Zero + 3D-printed gimbal (Reinforcement learning attempt)
 - **What we did**: Designed and built a gimbal test rig; experimented with **reinforcement learning**.  
