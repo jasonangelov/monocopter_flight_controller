@@ -82,7 +82,7 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 </table>
 
 
-## CAD DESIGN: Current Version (V4) [![Open in Onshape](https://img.shields.io/badge/Open%20in-Onshape-blue)](https://cad.onshape.com/documents/cd4769bf950c45c7067f6297/w/8c559fddb4f0c3af4cccb741/e/18afaee3e5cde682d116e205)
+## CAD DESIGN: Current Version (V4) [![Open in Onshape](https://img.shields.io/badge/Open_in-Onshape-blue)](https://cad.onshape.com/documents/cd4769bf950c45c7067f6297/w/8c559fddb4f0c3af4cccb741/e/18afaee3e5cde682d116e205)
 
 <table>
   <tr>
