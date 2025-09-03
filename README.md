@@ -169,8 +169,8 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 
 ### 3.3 V3 — Coaxial contra-rotating props (current)
 - **What we did**: torque cancellation via coaxial pair, **differential thrust** for yaw, larger chassis diameter.
-- **What worked**: Perfect yaw control, improved balance and weight distribution with larger chassis.
-- **What’s next**: optical-flow to measure translational velocity and drift, gps for position control.
+- **What failed**: Engineering flaws and tolerance issues between parts. Wire management and weight distribution.
+- **What’s next**: Larger propeller/chassis diameter, wire management improvements.
 
 ---
 
