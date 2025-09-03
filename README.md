@@ -170,7 +170,33 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 ### 3.3 V3 — Coaxial contra-rotating props (current)
 - **What we did**: torque cancellation via coaxial pair, **differential thrust** for yaw, larger chassis diameter.
 - **What failed**: Engineering flaws and tolerance issues between parts. Wire management and weight distribution.
-- **What’s next**: Larger propeller/chassis diameter, wire management improvements.
+- **Lesson**: Larger propeller/chassis diameter, wire management improvements.
+
+
+## V3 (Photos & CAD)
+
+<table>
+  <tr>
+    <td align="center" width="33%">
+      <a href="pictures/V3/3.png">
+        <img src="pictures/V3/3.png" alt="V3 monocopter photo 1" width="280"/>
+      </a><br/>
+      <sub><b>V3 — Monocopter Photo 1</b> — <i>Short caption here (e.g., assembled airframe)</i></sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="pictures/V3/6.png">
+        <img src="pictures/V3/6.png" alt="V3 monocopter photo 2" width="280"/>
+      </a><br/>
+      <sub><b>V3 — Monocopter Photo 2</b> — <i>Short caption here (e.g., top view / wiring)</i></sub>
+    </td>
+    <td align="center" width="33%">
+      <a href="pictures/V3/V3.png">
+        <img src="pictures/V3/V3.png" alt="V3 CAD render" width="280"/>
+      </a><br/>
+      <sub><b>V3 — CAD Image</b> — <i>Short caption here (e.g., fin geometry / duct layout)</i></sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
