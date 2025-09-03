@@ -194,7 +194,13 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
   </tr>
 </table>
 
+## Future Improvements
+- Rework entire design to have the center of mass under the point at which thrust is applied for more stability.
+- Other ideas include: springs for legs for shock absorbtion, have contra-rotating props on a gimbal for thrust vectoring instead of vanes.
+
+
 ---
+
 
 ## Authors
 - Jason Angelov - UCLA Computer Science
