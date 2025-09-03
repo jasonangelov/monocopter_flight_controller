@@ -60,19 +60,19 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
       <a href="https://www.youtube.com/watch?v=riI-cIHnShg">
         <img src="https://img.youtube.com/vi/riI-cIHnShg/hqdefault.jpg" alt="Trial 1 thumbnail" width="280"/>
       </a><br/>
-      <sub><b>Trial 1</b> — <i>Short caption here (e.g., indoor hover test)</i></sub>
+      <sub><b>Trial 1</b> — <i></i></sub>
     </td>
     <td align="center" width="33%">
       <a href="https://youtu.be/cCDeujReH3Y">
         <img src="https://img.youtube.com/vi/cCDeujReH3Y/hqdefault.jpg" alt="Trial 2 thumbnail" width="280"/>
       </a><br/>
-      <sub><b>Trial 2</b> — <i>Short caption here (e.g., altitude hold + drift)</i></sub>
+      <sub><b>Trial 2</b> — <i></i></sub>
     </td>
     <td align="center" width="33%">
       <a href="https://www.youtube.com/watch?v=jJXlnwY6VRc">
         <img src="https://img.youtube.com/vi/jJXlnwY6VRc/hqdefault.jpg" alt="Trial 3 thumbnail" width="280"/>
       </a><br/>
-      <sub><b>Trial 3</b> — <i>Short caption here (e.g., disturbance recovery)</i></sub>
+      <sub><b>Trial 3</b> — <i></i></sub>
     </td>
   </tr>
 </table>
