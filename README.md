@@ -183,13 +183,13 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
       <a href="pictures/V3/6.jpg">
         <img src="pictures/V3/6.jpg" alt="V3 monocopter photo 2" width="280"/>
       </a><br/>
-      <sub><b>V3 — Monocopter Photo 2</b> — <i></i></sub>
+      <sub><b>V3 — Monocopter Photo 2</b><i></i></sub>
     </td>
     <td align="center" width="33%">
       <a href="pictures/V3/V3.png">
         <img src="pictures/V3/V3.png" alt="V3 CAD render" width="280"/>
       </a><br/>
-      <sub><b>V3 — CAD Image</b> — <i></i></sub>
+      <sub><b>V3 — CAD Image</b><i></i></sub>
     </td>
   </tr>
 </table>
