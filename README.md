@@ -145,6 +145,28 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 - **What failed**: Failed to compensate for both yaw spinning and attitude tilts, Poor training efficiency, RL training did not translate to real world environment, lack of RTOS on Raspberry Pi Zero + Python code.
 - **Lesson**: Use two counter rotating propellers to eliminate yaw spin, use a traditional control system approach, better telemetry + debugging tools.
 
+
+## V2 (Gimbal & String Rigs)
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <a href="pictures/V2/v2_gimbal.JPG">
+        <img src="pictures/V2/v2_gimbal.JPG" alt="V2 gimbal rig" width="320"/>
+      </a><br/>
+      <sub><b>V2 Gimbal Rig</b> — <i>Bench tuning on a hinge/gimbal mount.</i></sub>
+    </td>
+    <td align="center" width="50%">
+      <a href="pictures/V2/v2_string.JPG">
+        <img src="pictures/V2/v2_string.JPG" alt="V2 string test rig" width="320"/>
+      </a><br/>
+      <sub><b>V2 String Test</b> — <i>Free-hanging stability and recovery checks.</i></sub>
+    </td>
+  </tr>
+</table>
+
+
+
+
 ### 3.3 V3 — Coaxial contra-rotating props (current)
 - **What we did**: torque cancellation via coaxial pair, **differential thrust** for yaw, larger chassis diameter.
 - **What worked**: Perfect yaw control, improved balance and weight distribution with larger chassis.
