@@ -39,16 +39,12 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
 - 4x servo-controlled fins
 - 2x brushless motors with ESCs
 
-> _Link to: BOM.md, wiring diagram image, CAD/STLs_
-
 ### 2.3 Software & control loop
 - **200 Hz** cascade PID control loop:
   - IMU-based attitude stabilization
   - Differential propeller speeds control yaw
   - Altitude hold using LiDAR
 - WiFi telemetry and tuning interface
-
-> _Link to: docs/controls.md (overview), docs/commands.md (CLI/Telnet)_
 
 ### 2.4 Current status
 -  Reliable lift, level attitude, altitude hold.
