@@ -1,5 +1,5 @@
 #include "ControlSystem.h"
-#include "Config.h"
+#include "FlightControlConfig.h"
 #include <math.h>
 
 ControlSystem::ControlSystem() {
@@ -34,7 +34,7 @@ ControlSystem::ControlSystem() {
   altKd = 2.0f;
   altLimit_us = 100;
   altLPF_alpha = 0.15f;
-  throttle_us = ESC_HOVER;
+  throttle_us = monocopter::kEscHoverUs;
   
   reset();
 }
@@ -56,6 +56,7 @@ void ControlSystem::reset() {
   altI_accum = 0;
   heightFilt_cm = 0;
   altOut_us = 0;
+  prevHeightFilt_cm = 0;
 }
 
 float ControlSystem::constrainF(float v, float lo, float hi) const {
@@ -139,23 +140,22 @@ void ControlSystem::updateYaw(float gyroZ, float dt) {
 void ControlSystem::updateAltitude(float heightM, uint8_t quality, uint32_t ageMs,
                                    float roll, float pitch, float dt) {
   float heightRaw_cm = NAN;
-  bool lidarFresh = (ageMs <= ALT_VALID_MS);
+  bool lidarFresh = (ageMs <= monocopter::kAltitudeValidMs);
   
   if (lidarFresh && quality > 0 && heightM > 0.03f) {
-    float rollRad = roll * DEG2RAD;
-    float pitchRad = pitch * DEG2RAD;
+    float rollRad = roll * monocopter::kDegToRad;
+    float pitchRad = pitch * monocopter::kDegToRad;
     float cosTilt = cosf(rollRad) * cosf(pitchRad);
     if (cosTilt < 0.1f) cosTilt = 0.1f;
     heightRaw_cm = heightM * 100.0f * cosTilt;
   }
   
   if (!isnan(heightRaw_cm)) {
-    static float prevFilt = 0.0f;
     heightFilt_cm += altLPF_alpha * (heightRaw_cm - heightFilt_cm);
     
     float err_cm = altTarget_cm - heightFilt_cm;
-    float dHeight_cm_s = (heightFilt_cm - prevFilt) / dt;
-    prevFilt = heightFilt_cm;
+    float dHeight_cm_s = (heightFilt_cm - prevHeightFilt_cm) / dt;
+    prevHeightFilt_cm = heightFilt_cm;
     
     altI_accum += err_cm * dt;
     float iTerm_us = constrainF(altKi * altI_accum, -altLimit_us, +altLimit_us);

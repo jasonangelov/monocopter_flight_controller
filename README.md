@@ -1,6 +1,6 @@
 # Monocopter Flight Controller
 
-[![Compile Firmware](https://github.com/jasonangelov/monocopter_flight_controller/actions/workflows/compile.yml/badge.svg)](https://github.com/jasonangelov/monocopter_flight_controller/actions/workflows/compile.yml)
+[![CI](https://github.com/jasonangelov/monocopter_flight_controller/actions/workflows/compile.yml/badge.svg)](https://github.com/jasonangelov/monocopter_flight_controller/actions/workflows/compile.yml)
 
 
 ESP32-based autonomous flight controller for a single-rotor drone with thrust vectoring control.
@@ -46,11 +46,37 @@ ESP32-based autonomous flight controller for a single-rotor drone with thrust ve
   - Altitude hold using LiDAR
 - WiFi telemetry and tuning interface
 
-### 2.4 Current status
+### 2.4 Software architecture
+- **ESP32 runtime:** the firmware runs on the ESP32 Arduino environment, which is backed by FreeRTOS on-device.
+- **Modular control stack:** `FlightController` accepts abstract sensor snapshots and returns control outputs plus diagnostics.
+- **Portable control core:** `ControlSystem` and `ActuatorMixer` build as standard C++ on a host machine for unit testing.
+- **Hardware adapters:** the Arduino sketch owns IMU reads, MSP UART transport, Wi-Fi/Telnet, and Servo writes.
+- **Diagnostics stream:** telnet telemetry exposes loop timing, sensor age, filtered altitude, yaw rate, and control outputs in a structured line-oriented format for logging.
+
+### 2.5 Current status
 -  Reliable lift, level attitude, altitude hold.
 
-### 2.5 Necessary future improvements
+### 2.6 Necessary future improvements
 - **Reduced lateral drift:** Use optical flow sensor + gps to remove sideways drift. 
+
+## Testing And CI
+- Host-side unit tests are built with CMake + Google Test.
+- The primary test targets are `firmware_monocopter/ControlSystem.*`, `firmware_monocopter/ActuatorMixer.*`, and `firmware_monocopter/FlightController.*`.
+- GitHub Actions runs both the host unit tests and an ESP32 firmware compile on every push and pull request.
+- Structured telemetry can be captured from telnet output for post-flight analysis.
+- Single local command for the full local CI flow: `make local-ci`
+
+Local prerequisites:
+
+```bash
+brew install cmake arduino-cli
+```
+
+Run everything locally:
+
+```bash
+make local-ci
+```
 
 # Flight Videos
 

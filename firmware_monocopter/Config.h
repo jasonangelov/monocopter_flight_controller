@@ -1,6 +1,8 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include "FlightControlConfig.h"
+
 /* ---------- WiFi Configuration ---------- */
 // Use #define instead of const char* to avoid multiple definition errors
 #define WIFI_SSID "YOUR_NETWORK"
@@ -23,13 +25,13 @@ const int UART_TX = 32;  // ESP32 transmits to sensor RX
 /* ---------- PWM Constants ---------- */
 const int SERVO_MIN   = 1100;
 const int SERVO_MAX   = 1900;
-const int SERVO_NEUT  = 1500;
-const int SERVO_RANGE = 250;
-const int ESC_OFF     = 1000;
-const int ESC_HOVER   = 1200;
+const int SERVO_NEUT  = monocopter::kServoNeutralUs;
+const int SERVO_RANGE = monocopter::kServoRangeUs;
+const int ESC_OFF     = monocopter::kEscOffUs;
+const int ESC_HOVER   = monocopter::kEscHoverUs;
 
 /* ---------- Control Constants ---------- */
-const float DEG2RAD = 0.01745329252f;
-const uint32_t ALT_VALID_MS = 300;  // LiDAR freshness window
+const float DEG2RAD = monocopter::kDegToRad;
+const uint32_t ALT_VALID_MS = monocopter::kAltitudeValidMs;  // LiDAR freshness window
 
 #endif

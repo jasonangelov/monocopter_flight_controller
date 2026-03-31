@@ -1,13 +1,31 @@
-name: Compile Firmware
+name: CI
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
+  unit-tests:
+    name: Host Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install host build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake g++
+
+      - name: Run unit tests
+        run: make host-tests
+
   compile:
     name: Compile ESP32 Firmware
     runs-on: ubuntu-latest
@@ -19,34 +37,20 @@ jobs:
       - name: Setup Arduino CLI
         uses: arduino/setup-arduino-cli@v1
       
-      - name: Install ESP32 core & libraries
-        run: |
-          arduino-cli config init
-          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-          arduino-cli core update-index
-          arduino-cli core install esp32:esp32
-          # Install required libraries
-          arduino-cli lib install "ESP32Servo"
-          arduino-cli lib install "Adafruit BNO055"
-          arduino-cli lib install "Adafruit Unified Sensor"
-          arduino-cli lib install "Adafruit BusIO"
-      
       - name: Compile sketch
-        run: |
-          # Compile with minimal warnings to avoid deprecation notices
-          arduino-cli compile --fqbn esp32:esp32:esp32 --warnings none --output-dir build firmware_monocopter
+        run: make firmware
       
       - name: Verify build output
         run: |
           echo "Build completed successfully!"
           echo "Build directory contents:"
-          ls -la build/
+          ls -la build/firmware/
           echo "Binary file details:"
-          file build/*.bin
+          file build/firmware/*.bin
       
       - name: Upload firmware artifact
         uses: actions/upload-artifact@v4
         with:
           name: firmware
-          path: build/*.bin
+          path: build/firmware/*.bin
           if-no-files-found: error

@@ -1,6 +1,7 @@
 #include "TelnetInterface.h"
 #include "ControlSystem.h"
 #include "Actuators.h"
+#include "FlightController.h"
 #include "MSPProtocol.h"
 
 TelnetInterface::TelnetInterface() : telnetServer(23) {
@@ -12,9 +13,28 @@ void TelnetInterface::begin() {
   Serial.println("Telnet server ready on port 23");
 }
 
-void TelnetInterface::sendTelemetry(float roll, float pitch, float height, int throttle) {
-  telnet.printf("angles(deg): roll %.2f  pitch %.2f  height %.1fcm  throttle %d\r\n",
-                roll, pitch, height * 100.0f, throttle);
+void TelnetInterface::sendTelemetry(float roll, float pitch, float height,
+                                    const monocopter::DiagnosticsSnapshot& diagnostics) {
+  telnet.printf(
+      "telemetry roll_deg=%.2f pitch_deg=%.2f height_cm=%.1f throttle_us=%d "
+      "roll_fin_us=%.1f pitch_fin_us=%.1f yaw_diff_us=%d loop_dt_ms=%.2f "
+      "range_age_ms=%lu flow_age_ms=%lu range_q=%u flow_q=%u filt_height_cm=%.1f "
+      "alt_out_us=%.1f yaw_rate_filt_dps=%.2f\r\n",
+      roll,
+      pitch,
+      height * 100.0f,
+      diagnostics.throttle_us,
+      diagnostics.roll_fin_us,
+      diagnostics.pitch_fin_us,
+      diagnostics.yaw_diff_us,
+      diagnostics.loop_dt_s * 1000.0f,
+      static_cast<unsigned long>(diagnostics.range_age_ms),
+      static_cast<unsigned long>(diagnostics.flow_age_ms),
+      diagnostics.range_quality,
+      diagnostics.flow_quality,
+      diagnostics.filtered_height_cm,
+      diagnostics.altitude_output_us,
+      diagnostics.yaw_rate_filtered_deg_s);
 }
 
 void TelnetInterface::update(bool& ctrlEnabled, ControlSystem& control,
@@ -129,9 +149,9 @@ void TelnetInterface::processCommand(const String& name, const String& arg,
   } else if (name == "altkp") {
     float v = arg.toFloat();
     if (arg.length() && v >= 0.0f && v <= 30.0f) {
-      float ki, kd, target, lpf;
+      float target, kp, ki, kd, lpf;
       int limit, throttle;
-      control.getAltitudeParams(target, ki, ki, kd, lpf, limit, throttle);
+      control.getAltitudeParams(target, kp, ki, kd, lpf, limit, throttle);
       control.setAltitudeGains(v, ki, kd);
       telnet.printf("✔ altkp %.3f\r\n", v);
     } else {
@@ -141,9 +161,9 @@ void TelnetInterface::processCommand(const String& name, const String& arg,
   } else if (name == "altki") {
     float v = arg.toFloat();
     if (arg.length() && v >= 0.0f && v <= 3.0f) {
-      float kp, kd, target, lpf;
+      float target, kp, ki, kd, lpf;
       int limit, throttle;
-      control.getAltitudeParams(target, kp, kp, kd, lpf, limit, throttle);
+      control.getAltitudeParams(target, kp, ki, kd, lpf, limit, throttle);
       control.setAltitudeGains(kp, v, kd);
       telnet.printf("✔ altki %.3f\r\n", v);
     } else {
@@ -153,9 +173,9 @@ void TelnetInterface::processCommand(const String& name, const String& arg,
   } else if (name == "altkd") {
     float v = arg.toFloat();
     if (arg.length() && v >= 0.0f && v <= 80.0f) {
-      float kp, ki, target, lpf;
+      float target, kp, ki, kd, lpf;
       int limit, throttle;
-      control.getAltitudeParams(target, kp, ki, ki, lpf, limit, throttle);
+      control.getAltitudeParams(target, kp, ki, kd, lpf, limit, throttle);
       control.setAltitudeGains(kp, ki, v);
       telnet.printf("✔ altkd %.3f\r\n", v);
     } else {
@@ -174,9 +194,9 @@ void TelnetInterface::processCommand(const String& name, const String& arg,
   } else if (name == "kp") {
     float v = arg.toFloat();
     if (arg.length() && v >= 0.0f && v <= 10.0f) {
-      float ki, kd, kpp, kip, kdp;
-      control.getAttitudeGains(v, ki, kd, kpp, kip, kdp);
-      control.setAttitudeGains(v, ki, kd);
+      float kpr, kir, kdr, kpp, kip, kdp;
+      control.getAttitudeGains(kpr, kir, kdr, kpp, kip, kdp);
+      control.setAttitudeGains(v, kir, kdr);
       telnet.printf("✔ Kp both axes = %.3f\r\n", v);
     } else {
       telnet.println("Enter Kp 0.0-10.0");
@@ -185,9 +205,9 @@ void TelnetInterface::processCommand(const String& name, const String& arg,
   } else if (name == "ki") {
     float v = arg.toFloat();
     if (arg.length() && v >= 0.0f && v <= 5.0f) {
-      float kp, kd, kpp, kip, kdp;
-      control.getAttitudeGains(kp, v, kd, kpp, kip, kdp);
-      control.setAttitudeGains(kp, v, kd);
+      float kpr, kir, kdr, kpp, kip, kdp;
+      control.getAttitudeGains(kpr, kir, kdr, kpp, kip, kdp);
+      control.setAttitudeGains(kpr, v, kdr);
       telnet.printf("✔ Ki both axes = %.3f\r\n", v);
     } else {
       telnet.println("Enter Ki 0.0-5.0");
@@ -196,9 +216,9 @@ void TelnetInterface::processCommand(const String& name, const String& arg,
   } else if (name == "kd") {
     float v = arg.toFloat();
     if (arg.length() && v >= 0.0f && v <= 10.0f) {
-      float kp, ki, kpp, kip, kdp;
-      control.getAttitudeGains(kp, ki, v, kpp, kip, kdp);
-      control.setAttitudeGains(kp, ki, v);
+      float kpr, kir, kdr, kpp, kip, kdp;
+      control.getAttitudeGains(kpr, kir, kdr, kpp, kip, kdp);
+      control.setAttitudeGains(kpr, kir, v);
       telnet.printf("✔ Kd both axes = %.3f\r\n", v);
     } else {
       telnet.println("Enter Kd 0.0-10.0");
@@ -207,9 +227,9 @@ void TelnetInterface::processCommand(const String& name, const String& arg,
   } else if (name == "kpr") {
     float v = arg.toFloat();
     if (arg.length() && v >= 0.0f && v <= 10.0f) {
-      float ki, kd, kpp, kip, kdp;
-      control.getAttitudeGains(v, ki, kd, kpp, kip, kdp);
-      control.setRollGains(v, ki, kd);
+      float kpr, kir, kdr, kpp, kip, kdp;
+      control.getAttitudeGains(kpr, kir, kdr, kpp, kip, kdp);
+      control.setRollGains(v, kir, kdr);
       telnet.printf("✔ kpr %.3f\r\n", v);
     } else {
       telnet.println("Enter kpr 0.0-10.0");

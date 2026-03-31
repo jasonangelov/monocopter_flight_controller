@@ -1,7 +1,8 @@
 #ifndef CONTROL_SYSTEM_H
 #define CONTROL_SYSTEM_H
 
-#include <Arduino.h>
+#include <math.h>
+#include <stdint.h>
 
 class ControlSystem {
 public:
@@ -93,6 +94,7 @@ private:
   float altOut_us;
   float altLPF_alpha;
   int throttle_us;
+  float prevHeightFilt_cm;
   
   // Helper methods
   float constrainF(float v, float lo, float hi) const;

@@ -6,6 +6,9 @@
 class ControlSystem;
 class Actuators;
 class MSPProtocol;
+namespace monocopter {
+struct DiagnosticsSnapshot;
+}
 
 class TelnetInterface {
 public:
@@ -16,7 +19,8 @@ public:
   
   bool hasClient() { return telnet && telnet.connected(); }  // REMOVED const
   bool shouldSendTelemetry() { return telnet.peek() == -1; }  // REMOVED const
-  void sendTelemetry(float roll, float pitch, float height, int throttle);
+  void sendTelemetry(float roll, float pitch, float height,
+                     const monocopter::DiagnosticsSnapshot& diagnostics);
   
 private:
   WiFiServer telnetServer;

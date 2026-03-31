@@ -15,14 +15,14 @@
 
 #include "Config.h"
 #include "MSPProtocol.h"
-#include "ControlSystem.h"
+#include "FlightController.h"
 #include "TelnetInterface.h"
 #include "Actuators.h"
 
 /* ---------- Objects ---------- */
 Adafruit_BNO055 bno = Adafruit_BNO055(55);
 MSPProtocol msp;
-ControlSystem control;
+monocopter::FlightController flightController;
 TelnetInterface telnetInterface;
 Actuators actuators;
 
@@ -71,7 +71,7 @@ void setup() {
   msp.begin();
   
   // Initialize control system
-  control.init();
+  flightController.init();
   
   lastLoopUs = micros();
   Serial.println(F("Ready - Connect via telnet to monocopter.local:23"));
@@ -80,7 +80,7 @@ void setup() {
 /* ---------- Main Loop ---------- */
 void loop() {
   // Handle telnet commands
-  telnetInterface.update(ctrlEnabled, control, actuators, msp);
+  telnetInterface.update(ctrlEnabled, flightController.control(), actuators, msp);
   
   // Update MSP sensors
   msp.update();
@@ -104,27 +104,29 @@ void loop() {
       float heightM = msp.getHeight();
       uint8_t rangeQuality = msp.getRangeQuality();
       uint32_t rangeAge = msp.getRangeAge();
+      uint8_t flowQuality = msp.getFlowQuality();
+      uint32_t flowAge = msp.getFlowAge();
       
-      // Run control algorithms
-      control.updateAttitude(roll, pitch, dt);
-      control.updateYaw(gyroZ, dt);
-      control.updateAltitude(heightM, rangeQuality, rangeAge, roll, pitch, dt);
-      
-      // Get control outputs
-      float rollCmd = control.getRollCommand();
-      float pitchCmd = control.getPitchCommand();
-      int throttle = control.getThrottleCommand();
-      int yawDiff = control.getYawDifferential();
+      monocopter::ControlInputs inputs;
+      inputs.control_enabled = ctrlEnabled;
+      inputs.loop_dt_s = dt;
+      inputs.imu = monocopter::ImuSample{roll, pitch, gyroZ};
+      inputs.rangefinder = monocopter::RangefinderSample{heightM, rangeQuality, rangeAge};
+      inputs.optical_flow = monocopter::OpticalFlowSample{
+          msp.getVelocityX(), msp.getVelocityY(), flowQuality, flowAge};
+
+      const monocopter::ControlTickResult result = flightController.step(inputs);
       
       // Apply to actuators
-      actuators.writeFins(rollCmd, pitchCmd);
-      actuators.setMotors(throttle, yawDiff);
+      actuators.writeFins(result.outputs.roll_fin_us, result.outputs.pitch_fin_us);
+      actuators.setMotors(result.outputs.throttle_us, result.outputs.yaw_diff_us);
       
       // Telemetry output
       if (telnetInterface.hasClient() && telnetInterface.shouldSendTelemetry()) {
-        telnetInterface.sendTelemetry(roll, pitch, heightM, throttle);
+        telnetInterface.sendTelemetry(roll, pitch, heightM, result.diagnostics);
       }
     } else {
+      actuators.writeFins(0, 0);
       actuators.motorsOff();
     }
   }

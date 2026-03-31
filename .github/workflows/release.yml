@@ -17,34 +17,12 @@ jobs:
       - name: Setup Arduino CLI
         uses: arduino/setup-arduino-cli@v1
       
-      - name: Install dependencies
-        run: |
-          arduino-cli config init
-          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-          arduino-cli core update-index
-          arduino-cli core install esp32:esp32
-          arduino-cli lib install "ESP32Servo"
-          arduino-cli lib install "Adafruit BNO055"
-          arduino-cli lib install "Adafruit Unified Sensor"
-          arduino-cli lib install "Adafruit BusIO"
-      
       - name: Compile firmware
-        run: |
-          arduino-cli compile --fqbn esp32:esp32:esp32 --warnings default --output-dir build firmware_monocopter
-          echo "Build completed. Contents:"
-          ls -la build/
+        run: make firmware
       
       - name: Prepare release binary
         run: |
-          # Find and rename the binary
-          cd build
-          for file in *.bin; do
-            if [ -f "$file" ]; then
-              mv "$file" "../monocopter-firmware-${{ github.ref_name }}.bin"
-              echo "Renamed $file to monocopter-firmware-${{ github.ref_name }}.bin"
-            fi
-          done
-          cd ..
+          cp build/firmware/firmware_monocopter.ino.merged.bin "monocopter-firmware-${{ github.ref_name }}.bin"
           ls -la monocopter-firmware-*.bin
       
       - name: Create Release
